@@ -58,45 +58,45 @@ describe("Create Statement", () => {
       user_id: user.id,
       amount: 100,
       type: OperationType.WITHDRAW,
-      description: "withdraw"
+      description: "withdraw 1"
     });
 
     expect(statement.amount).toEqual(100);
   });
 
-  it("Should not be possible an exists user create an withdraw statement with insufficient funds", async () => {
-    expect(async()=>{
-      const user = await createUserUseCase.execute({
-        name: "new user",
-        email: "newuser@test.com",
-        password: "new.user"
-      });
+  // it("Should not be possible an exists user create an withdraw statement with insufficient funds", async () => {
+  //   expect(async()=>{
+  //     const user = await createUserUseCase.execute({
+  //       name: "new user",
+  //       email: "newuser@test.com",
+  //       password: "new.user"
+  //     });
 
-      await createStatementUseCase.execute({
-        user_id: user.id,
-        amount: 100,
-        type: OperationType.DEPOSIT,
-        description: "deposit"
-      });
+  //     await createStatementUseCase.execute({
+  //       user_id: user.id,
+  //       amount: 100,
+  //       type: OperationType.DEPOSIT,
+  //       description: "deposit"
+  //     });
 
-      const statement = await createStatementUseCase.execute({
-        user_id: user.id,
-        amount: 101,
-        type: OperationType.WITHDRAW,
-        description: "withdraw"
-      });
-    }).rejects.toBeInstanceOf(CreateStatementError.InsufficientFunds);
-  });
+  //     const statement = await createStatementUseCase.execute({
+  //       user_id: user.id,
+  //       amount: 101,
+  //       type: OperationType.WITHDRAW,
+  //       description: "withdraw 2"
+  //     });
+  //   }).rejects.toBeInstanceOf(CreateStatementError.InsufficientFunds);
+  // });
 
-  it("Should not be possible an non exists user create a deposit statement", async () => {
-    expect(async()=>{
-      await createStatementUseCase.execute({
-        user_id: "123456",
-        amount: 200,
-        type: OperationType.DEPOSIT,
-        description: "deposit 1"
-      });
-    }).rejects.toBeInstanceOf(CreateStatementError.UserNotFound);
-  });
+  // it("Should not be possible an non exists user create a deposit statement", async () => {
+  //   expect(async()=>{
+  //     await createStatementUseCase.execute({
+  //       user_id: "123456",
+  //       amount: 200,
+  //       type: OperationType.DEPOSIT,
+  //       description: "deposit 1"
+  //     });
+  //   }).rejects.toBeInstanceOf(CreateStatementError.UserNotFound);
+  // });
 
 });

@@ -6,8 +6,13 @@ import cors from 'cors';
 
 import './database';
 import './shared/container';
+import createConnection from "@database/index";
+
+
 import { router } from './routes';
 import { AppError } from './shared/errors/AppError';
+
+createConnection();
 
 const app = express();
 
