@@ -1,3 +1,4 @@
+import "reflect-metadata";
 import { inject, injectable } from "tsyringe";
 
 import { IUsersRepository } from "../../../users/repositories/IUsersRepository";
@@ -14,16 +15,24 @@ export class CreateStatementUseCase {
 
     @inject('StatementsRepository')
     private statementsRepository: IStatementsRepository
-  ) {}
+  ) { }
 
-  async execute({ user_id, type, amount, description }: ICreateStatementDTO):Promise<Statement>{
+  async execute({ user_id, type, amount, description, sender_id }: ICreateStatementDTO): Promise<Statement> {
     const user = await this.usersRepository.findById(user_id);
 
-    if(!user) {
+    if (!user) {
       throw new CreateStatementError.UserNotFound();
     }
 
-    if(type === 'withdraw') {
+    if (type === 'transfer') {
+      const { balance } = await this.statementsRepository.getUserBalance({ user_id: sender_id });
+
+      if (balance < amount) {
+        throw new CreateStatementError.InsufficientFunds()
+      }
+    }
+
+    if (type === 'withdraw') {
       const { balance } = await this.statementsRepository.getUserBalance({ user_id });
 
       if (balance < amount) {
@@ -35,8 +44,10 @@ export class CreateStatementUseCase {
       user_id,
       type,
       amount,
-      description
+      description,
+      sender_id
     });
+
 
     return statementOperation;
   }

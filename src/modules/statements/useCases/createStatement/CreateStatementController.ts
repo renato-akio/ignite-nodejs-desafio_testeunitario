@@ -6,15 +6,20 @@ import { CreateStatementUseCase } from './CreateStatementUseCase';
 enum OperationType {
   DEPOSIT = 'deposit',
   WITHDRAW = 'withdraw',
+  TRANSFER = 'transfer'
 }
 
 export class CreateStatementController {
   async execute(request: Request, response: Response) {
-    const { id: user_id } = request.user;
-    const { amount, description } = request.body;
-
     const splittedPath = request.originalUrl.split('/')
-    const type = splittedPath[splittedPath.length - 1] as OperationType;
+    const type = splittedPath[splittedPath.length - (splittedPath.includes("transfer") ? 2 : 1)] as OperationType;
+
+    const { id } = request.user;
+
+    let sender_id = (type === OperationType.TRANSFER) ? id : null;
+    let { user_id } = (type === OperationType.TRANSFER) ? request.params : {"user_id": id};
+
+    const { amount, description } = request.body;
 
     const createStatement = container.resolve(CreateStatementUseCase);
 
@@ -22,7 +27,8 @@ export class CreateStatementController {
       user_id,
       type,
       amount,
-      description
+      description,
+      sender_id
     });
 
     return response.status(201).json(statement);
