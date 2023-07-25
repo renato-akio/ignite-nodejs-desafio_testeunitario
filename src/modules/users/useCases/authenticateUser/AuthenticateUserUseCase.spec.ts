@@ -1,7 +1,6 @@
 import { InMemoryUsersRepository } from "@modules/users/repositories/in-memory/InMemoryUsersRepository";
 import { CreateUserUseCase } from "../createUser/CreateUserUseCase";
 import { AuthenticateUserUseCase } from "./AuthenticateUserUseCase";
-import exp from "constants";
 import { IncorrectEmailOrPasswordError } from "./IncorrectEmailOrPasswordError";
 
 let createUserUseCase: CreateUserUseCase;

@@ -4,6 +4,7 @@ import { IUsersRepository } from "../../../users/repositories/IUsersRepository";
 import { IStatementsRepository } from "../../repositories/IStatementsRepository";
 import { CreateStatementError } from "./CreateStatementError";
 import { ICreateStatementDTO } from "./ICreateStatementDTO";
+import { Statement } from "@modules/statements/entities/Statement";
 
 @injectable()
 export class CreateStatementUseCase {
@@ -15,7 +16,7 @@ export class CreateStatementUseCase {
     private statementsRepository: IStatementsRepository
   ) {}
 
-  async execute({ user_id, type, amount, description }: ICreateStatementDTO) {
+  async execute({ user_id, type, amount, description }: ICreateStatementDTO):Promise<Statement>{
     const user = await this.usersRepository.findById(user_id);
 
     if(!user) {
